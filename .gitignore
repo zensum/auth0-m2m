@@ -19,3 +19,5 @@ out/
 *.iws
 classes
 .idea
+
+Main.kt
