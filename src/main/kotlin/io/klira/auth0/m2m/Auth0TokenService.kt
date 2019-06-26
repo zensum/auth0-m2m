@@ -22,7 +22,7 @@ class Auth0TokenService(
     private val requestBody = TokenRequest(clientId, clientSecret, audience)
 
     /**
-     * We can use caching since the expiration time of JWTs from
+     * We should use caching since the expiration time of JWTs from
      * Auth0 is usually quite long, and thus, reduce the amount
      * of actual requests to Auth0
      */
@@ -63,8 +63,11 @@ class Auth0TokenService(
     }
 
     private fun handleResponse(call: Call, response: Response): String {
-        val responseBody: String = response.body()?.string()!!
-        val data: Map<String, String> = jacksonObjectMapper().readValue(responseBody)
+        val responseBody: String? = response.body()?.string()
+        if(response.code() >= 400) {
+            error("Unexpected response (${response.code()}): $responseBody")
+        }
+        val data: Map<String, String> = jacksonObjectMapper().readValue(responseBody!!)
         return data["access_token"] ?: error("Missing field 'access_token' in response, got $data")
     }
 
