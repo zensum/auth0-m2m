@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
 class Auth0TokenService(
@@ -36,15 +37,23 @@ class Auth0TokenService(
         clientSecret: String = System.getenv("AUTH0_CLIENT_SECRET")
     ): this(ClientFactory.createDefaultClient(connectionPool), audience, clientId, clientSecret)
 
-    override suspend fun requestToken(): String {
+    override suspend fun requestToken(maxAge: Duration, expirationThreshold: Duration): String {
         log.debug { "Requesting Auth0 M2M token" }
-        return token.updateAndGet { current: Token? ->
-            when {
-                current == null -> fetchToken()
-                current.isExpired() -> fetchToken()
-                else -> current.also { log.debug { "Using saved token" } }
-            }
-        }.token
+         val tokenFound: Token = token.updateAndGet { current: Token? ->
+             try {
+                 when {
+                     current == null -> fetchToken()
+                     current.isExpired(expirationThreshold) -> fetchToken()
+                     current.age() > maxAge -> fetchToken()
+                     else -> current.also { log.debug { "Using saved token" } }
+                 }
+             } catch(e: Throwable) {
+                 log.error { "Unable to fetch token: ${e.message}" }
+                 current ?: error("Token was required, but none was present and fetch failed")
+             }
+        }
+
+        return tokenFound.token
     }
 
     private suspend fun fetchToken(): Token {
