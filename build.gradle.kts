@@ -18,7 +18,7 @@ group = "io.klira."
 version = "0.1.0"
 description = "Wrapper library for requesting a machine-to-machine token from Auth0"
 
-defaultTasks = listOf("test")
+defaultTasks = mutableListOf("test")
 
 repositories {
     mavenLocal()
@@ -41,6 +41,8 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", Version.JACKSON)
 
     implementation("com.squareup.okhttp3:okhttp:3.14.2")
+    implementation("com.auth0", "java-jwt", "3.7.0")
+
     // Junit
     testCompile("org.junit.jupiter", "junit-jupiter-api", Version.JUNIT)
     testRuntime("org.junit.jupiter", "junit-jupiter-engine", Version.JUNIT)

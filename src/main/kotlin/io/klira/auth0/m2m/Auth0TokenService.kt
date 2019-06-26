@@ -4,7 +4,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.future.await
 import mu.KotlinLogging
-import okhttp3.CacheControl
 import okhttp3.Call
 import okhttp3.ConnectionPool
 import okhttp3.MediaType
@@ -13,7 +12,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 
 class Auth0TokenService(
     private val client: OkHttpClient = ClientFactory.createDefaultClient(),
@@ -23,17 +21,7 @@ class Auth0TokenService(
 ): TokenService {
     private val requestBody = TokenRequest(clientId, clientSecret, audience)
     private val log = KotlinLogging.logger("Auth0 Client [$audience]")
-
-    /**
-     * We should use caching since the expiration time of JWTs from
-     * Auth0 is usually quite long, and thus, reduce the amount
-     * of actual requests to Auth0
-     */
-    private val cacheControl = CacheControl.Builder()
-        .maxAge(1, TimeUnit.HOURS)
-        .minFresh(10, TimeUnit.MINUTES)
-        .maxStale(30, TimeUnit.MINUTES)
-        .build()
+    private val token: Atomic<Token> = Atomic()
 
     /**
      * Secondary constructor which takes a [ConnectionPool] as an
@@ -50,13 +38,19 @@ class Auth0TokenService(
 
     override suspend fun requestToken(): String {
         log.debug { "Requesting Auth0 M2M token" }
-        println("Requesting Auth0 M2M token")
+        return token.updateAndGet { current: Token? ->
+            when {
+                current == null -> fetchToken()
+                current.isExpired() -> fetchToken()
+                else -> current.also { log.debug { "Using saved token" } }
+            }
+        }.token
+    }
+
+    private suspend fun fetchToken(): Token {
         val request: Request = buildRequest()
-        val token: CompletableFuture<String> = client.asyncRequest(request, transform = ::handleResponse)
-        return token.await().also {
-            println("Auth0 M2M token received")
-            log.debug { "Auth0 M2M token received" }
-        }
+        val tokenContent: CompletableFuture<String> = client.asyncRequest(request, transform = ::handleResponse)
+        return Token(tokenContent.await())
     }
 
     private fun buildRequest(): Request {
@@ -64,25 +58,14 @@ class Auth0TokenService(
         val body: RequestBody = RequestBody.create(MediaType.get("application/json"), json)
 
         return Request.Builder()
-            .cacheControl(cacheControl)
             .url(AUTH0_TOKEN_ENDPOINT)
             .addHeader("Content-Type", "application/json")
             .post(body)
             .build()
     }
 
-    // TODO Fix caching https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
     private fun handleResponse(call: Call, response: Response): String {
         val responseBody: String? = response.body()?.string()
-        val cached: Boolean = response.cacheResponse() != null && response.networkResponse() == null
-        println("Auth0 API, response ${response.code()}, cached: $cached, c: ${response.cacheResponse()}, n: ${response.networkResponse()}")
-        log.debug {
-            val cached: Boolean = response.cacheResponse() != null && response.networkResponse() == null
-            "Auth0 API, response ${response.code()}, cached: $cached"
-        }
-        client.cache()!!.let {
-            println("Request: ${it.requestCount()}, cached: ${it.hitCount()}, network: ${it.networkCount()}")
-        }
         if(response.code() >= 400) {
             error("Unexpected response (${response.code()}): $responseBody")
         }
