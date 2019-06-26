@@ -1,1 +1,1 @@
-rootProject.name = "{{project_name}}"
+rootProject.name = "auth0-m2m.library"
