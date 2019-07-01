@@ -16,12 +16,10 @@ import java.util.concurrent.CompletableFuture
 
 class Auth0TokenService(
     private val client: OkHttpClient = ClientFactory.createDefaultClient(),
-    audience: String = System.getenv().getOrDefault("AUTH0_AUDIENCE", DEFAULT_AUDIENCE),
-    clientId: String = System.getenv("AUTH0_CLIENT_ID"),
-    clientSecret: String = System.getenv("AUTH0_CLIENT_SECRET")
+    config: ServiceConfig = ServiceConfig()
 ): TokenService {
-    private val requestBody = TokenRequest(clientId, clientSecret, audience)
-    private val log = KotlinLogging.logger("Auth0 Client [$audience]")
+    private val requestBody = TokenRequest(config.clientId, config.clientSecret, config.audience)
+    private val log = KotlinLogging.logger("Auth0 Client [${config.audience}]")
     private val token: Atomic<Token> = Atomic()
 
     /**
@@ -32,10 +30,13 @@ class Auth0TokenService(
      */
     constructor(
         connectionPool: ConnectionPool,
-        audience: String = System.getenv().getOrDefault("AUTH0_AUDIENCE", DEFAULT_AUDIENCE),
-        clientId: String = System.getenv("AUTH0_CLIENT_ID"),
-        clientSecret: String = System.getenv("AUTH0_CLIENT_SECRET")
-    ): this(ClientFactory.createDefaultClient(connectionPool), audience, clientId, clientSecret)
+        config: ServiceConfig = ServiceConfig()
+    ): this(ClientFactory.createDefaultClient(connectionPool), config)
+
+    constructor(
+        client: OkHttpClient = ClientFactory.createDefaultClient(),
+        config: Map<String, String>
+    ): this(client, ServiceConfig(config))
 
     override suspend fun requestToken(maxAge: Duration, expirationThreshold: Duration): String {
         log.debug { "Requesting Auth0 M2M token" }
@@ -83,7 +84,6 @@ class Auth0TokenService(
     }
 
     companion object {
-        const val DEFAULT_AUDIENCE = "https://DEFAULT_AUDIENCE"
-        private const val AUTH0_TOKEN_ENDPOINT = "https://TENANT.REGION.auth0.com/oauth/token"
+        private const val AUTH0_TOKEN_ENDPOINT = "https://TENANT.auth0.com/oauth/token"
     }
 }
