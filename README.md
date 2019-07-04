@@ -1,6 +1,9 @@
 # auth0-m2m.library
 Wrapper library for requesting a machine-to-machine token from Auth0
 
+[![CircleCI](https://circleci.com/gh/zensum/auth0-m2m.library.svg?style=svg)](https://circleci.com/gh/zensum/auth0-m2m.library)
+[![Release](https://jitpack.io/v/zensum/auth0-m2m.library.svg)](https://jitpack.io/#zensum/auth0-m2m.library)
+
 ## Motivation
 Many services that we have created are exposed to the internet, and requests to
 them may have to be authenticated by some means. Our most common authentication
