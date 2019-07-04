@@ -36,6 +36,6 @@ given to the constructor of [Auth0TokenService](src/main/kotlin/io/klira/auth0/m
 
 | Environment Variable |  Description |
 | -------------------- | ------------ |
-| AUTH0_AUDIENCE       | Sets the audience for the token. Will default to `https://api5z.fyi` if no audience is set.|
+| AUTH0_AUDIENCE       | Sets the audience for the token. Will default to `https://TENANT` if no audience is set.|
 | AUTH0_CLIENT_ID      | Client id used in authentication for token request to Auth0 API |
 | AUTH0_CLIENT_SECRET  | Client secret used in authentication for token request to Auth0 API |
