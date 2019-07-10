@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import java.lang.RuntimeException
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
@@ -48,9 +49,9 @@ class Auth0TokenService(
                      current.age() > maxAge -> fetchToken()
                      else -> current.also { log.debug { "Using saved token" } }
                  }
-             } catch(e: Throwable) {
-                 log.error { "Unable to fetch token: ${e.message}" }
-                 current ?: error("Token was required, but none was present and fetch failed")
+             } catch(exception: Throwable) {
+                 log.error { "Unable to fetch token: ${exception.message}" }
+                 current ?: fetchFailed(exception)
              }
         }
 
@@ -86,4 +87,10 @@ class Auth0TokenService(
     companion object {
         private const val AUTH0_TOKEN_ENDPOINT = "https://TENANT.auth0.com/oauth/token"
     }
+}
+
+const val ERROR_MESSAGE = "Token was required, but none was present and fetch failed"
+
+private fun fetchFailed(exception: Throwable): Nothing {
+    throw IllegalStateException(ERROR_MESSAGE, exception)
 }
