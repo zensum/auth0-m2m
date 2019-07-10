@@ -19,6 +19,13 @@ interface TokenService {
         expirationThreshold: Duration = defaultThreshold
     ): String
 
+    /**
+     * Stop the token service, cancelling queued requests and
+     * frees and resources this service may use such as thread
+     * pools.
+     */
+    fun shutdown()
+
     companion object {
         private val defaultMaxAge = Duration.ofMinutes(30L)
         private val defaultThreshold = Duration.ofMinutes(20L)

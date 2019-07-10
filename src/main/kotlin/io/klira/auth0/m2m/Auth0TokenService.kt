@@ -84,6 +84,12 @@ class Auth0TokenService(
         return data["access_token"] ?: error("Missing field 'access_token' in response, got $data")
     }
 
+    override fun shutdown() {
+        this.client.connectionPool().evictAll()
+        this.client.dispatcher().cancelAll()
+        this.client.dispatcher().executorService().shutdown()
+    }
+
     companion object {
         private const val AUTH0_TOKEN_ENDPOINT = "https://TENANT.auth0.com/oauth/token"
     }
