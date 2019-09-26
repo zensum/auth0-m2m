@@ -40,7 +40,6 @@ class Auth0TokenService(
     ): this(client, ServiceConfig(config))
 
     override suspend fun requestToken(maxAge: Duration, expirationThreshold: Duration): String {
-        log.debug { "Requesting Auth0 M2M token" }
          val tokenFound: Token = token.updateAndGet { current: Token? ->
              try {
                  when {
@@ -60,6 +59,7 @@ class Auth0TokenService(
 
     private suspend fun fetchToken(): Token {
         val request: Request = buildRequest()
+        log.debug { "Requesting Auth0 M2M token" }
         val tokenContent: CompletableFuture<String> = client.asyncRequest(request, transform = ::handleResponse)
         return Token(tokenContent.await())
     }
