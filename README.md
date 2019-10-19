@@ -45,6 +45,7 @@ given to the constructor of [Auth0TokenService](src/main/kotlin/io/klira/auth0/m
 
 | Environment Variable |  Description |
 | -------------------- | ------------ |
-| AUTH0_AUDIENCE       | Sets the audience for the token. Will default to `https://TENANT` if no audience is set.|
+| AUTH0_AUDIENCE       | Sets the audience for the token |
 | AUTH0_CLIENT_ID      | Client id used in authentication for token request to Auth0 API |
 | AUTH0_CLIENT_SECRET  | Client secret used in authentication for token request to Auth0 API |
+| AUTH0_TENANT_URL     | Auth0 URL from which the tokens will be requested, will usually be in the format `https://TENANT.REGION.auth0.com/oauth/token`, unless a custom domain is used. See [Auth0 documentation](https://auth0.com/docs/api/authentication?http#client-credentials-flow) for more information. 
