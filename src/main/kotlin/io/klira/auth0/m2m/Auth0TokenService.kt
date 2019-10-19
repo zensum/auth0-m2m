@@ -19,8 +19,9 @@ class Auth0TokenService(
     private val client: OkHttpClient = ClientFactory.createDefaultClient(),
     config: ServiceConfig = ServiceConfig()
 ): TokenService {
-    private val requestBody = TokenRequest(config.clientId, config.clientSecret, config.audience)
-    private val log = KotlinLogging.logger("Auth0 Client [${config.audience}]")
+    private val requestBody = TokenRequest(config.clientId(), config.clientSecret(), config.audience())
+    private val authTokenEndpoint: String = config.tenant()
+    private val log = KotlinLogging.logger("Auth0 Client [${config.audience()}]")
     private val token: Atomic<Token> = Atomic()
 
     /**
@@ -69,7 +70,7 @@ class Auth0TokenService(
         val body: RequestBody = RequestBody.create(MediaType.get("application/json"), json)
 
         return Request.Builder()
-            .url(AUTH0_TOKEN_ENDPOINT)
+            .url(authTokenEndpoint)
             .addHeader("Content-Type", "application/json")
             .post(body)
             .build()
@@ -88,10 +89,6 @@ class Auth0TokenService(
         this.client.connectionPool().evictAll()
         this.client.dispatcher().cancelAll()
         this.client.dispatcher().executorService().shutdown()
-    }
-
-    companion object {
-        private const val AUTH0_TOKEN_ENDPOINT = "https://TENANT.auth0.com/oauth/token"
     }
 }
 
