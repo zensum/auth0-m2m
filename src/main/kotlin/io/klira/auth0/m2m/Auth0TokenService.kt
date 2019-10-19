@@ -92,7 +92,7 @@ class Auth0TokenService(
     }
 }
 
-const val ERROR_MESSAGE = "Token was required, but none was present and fetch failed"
+private const val ERROR_MESSAGE = "Token was required, but none was present and fetch failed"
 
 private fun fetchFailed(exception: Throwable): Nothing {
     throw IllegalStateException(ERROR_MESSAGE, exception)
