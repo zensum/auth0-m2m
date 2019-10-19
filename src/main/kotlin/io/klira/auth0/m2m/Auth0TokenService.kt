@@ -75,7 +75,7 @@ class Auth0TokenService(
             .build()
     }
 
-    private fun handleResponse(call: Call, response: Response): String {
+    private fun handleResponse(@Suppress("UNUSED_PARAMETER") call: Call, response: Response): String {
         val responseBody: String? = response.body()?.string()
         if(response.code() >= 400) {
             error("Unexpected response (${response.code()}): $responseBody")
