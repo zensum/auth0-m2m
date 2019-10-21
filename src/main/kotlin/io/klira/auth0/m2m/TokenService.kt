@@ -7,7 +7,7 @@ interface TokenService {
     /**
      * Retrieve an authentication token.
      *
-     * If a token is cachee, use it if
+     * If a token is cached, use it if
      * 1. It is no older than [maxAge] *and*
      * 2. The time until the token expires is equal to
      * or greater than [expirationThreshold]
@@ -21,7 +21,7 @@ interface TokenService {
 
     /**
      * Stop the token service, cancelling queued requests and
-     * frees and resources this service may use such as thread
+     * frees any resources this service may use such as thread
      * pools.
      */
     fun shutdown()
