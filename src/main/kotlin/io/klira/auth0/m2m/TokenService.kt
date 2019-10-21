@@ -12,7 +12,9 @@ interface TokenService {
      * 2. The time until the token expires is equal to
      * or greater than [expirationThreshold]
      *
-     * If a token is not cached, a new one will be fetched
+     * If a token is not cached, a new one will be fetched. Default
+     * value for [maxAge] is 12 hours and default value for
+     * [expirationThreshold] is 20 minutes.
      */
     suspend fun requestToken(
         maxAge: Duration = defaultMaxAge,
