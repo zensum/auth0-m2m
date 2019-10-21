@@ -27,7 +27,7 @@ interface TokenService {
     fun shutdown()
 
     companion object {
-        private val defaultMaxAge = Duration.ofMinutes(30L)
+        private val defaultMaxAge = Duration.ofHours(12)
         private val defaultThreshold = Duration.ofMinutes(20L)
     }
 }
