@@ -18,7 +18,7 @@ See [Using JSON Web Tokens](https://github.com/zensum/documentation/tree/master/
 
 Add to `build.gradle`:
 ```gradle
-implementation("com.github.zensum:auth0-m2m.library:e64517c")
+implementation("com.github.zensum:auth0-m2m.library:566d4a2")
 implementation("com.squareup.okhttp3:okhttp:3.14.2")
 ```
 
