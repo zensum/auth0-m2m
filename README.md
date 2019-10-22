@@ -2,13 +2,12 @@
 Wrapper library for requesting a machine-to-machine token from Auth0
 
 [![CircleCI](https://circleci.com/gh/zensum/auth0-m2m.library.svg?style=svg)](https://circleci.com/gh/zensum/auth0-m2m.library)
-[![Release](https://jitpack.io/v/zensum/auth0-m2m.library.svg)](https://jitpack.io/#zensum/auth0-m2m.library)
+[![Release](https://jitpack.io/v/zensum/auth0-m2m.svg)](https://jitpack.io/#zensum/auth0-m2m)
 
 ## Motivation
-Many services that we have created are exposed to the internet, and requests to
-them may have to be authenticated by some means. Our most common authentication
+Many services requires authenticatation by some means. A common authentication
 method is by a _bearer token_ that is a JSON Web Token (JWT) which is issued by
-[Auth0](https://auth0.com). When our services are making requests to each other
+[Auth0](https://auth0.com). When services are making requests to each other
 by an Auth0 JWT, a machine-to-machine token is required. This library is a
 convenient wrapper for doing requests for fetching such token from Auth0.
 
