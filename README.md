@@ -1,4 +1,4 @@
-# auth0-m2m.library
+# auth0-m2m
 Wrapper library for requesting a machine-to-machine token from Auth0
 
 [![CircleCI](https://circleci.com/gh/zensum/auth0-m2m.library.svg?style=svg)](https://circleci.com/gh/zensum/auth0-m2m.library)
