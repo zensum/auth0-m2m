@@ -9,7 +9,7 @@ object Version {
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.3.21" apply true
-    id("java") apply true
+    id("java-library") apply true
     id("maven") apply true
     id("idea") apply true
 }
@@ -40,7 +40,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", Version.JACKSON)
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", Version.JACKSON)
 
-    implementation("com.squareup.okhttp3:okhttp:3.14.2")
+    api("com.squareup.okhttp3:okhttp:3.14.2")
     implementation("com.auth0", "java-jwt", "3.7.0")
 
     // Junit
