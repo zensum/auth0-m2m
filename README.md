@@ -15,10 +15,9 @@ See [Using JSON Web Tokens](https://github.com/zensum/documentation/tree/master/
 
 ## Usage
 
-Add to `build.gradle`:
+Add to `build.gradle(.kts)`:
 ```gradle
-implementation("com.github.zensum:auth0-m2m.library:566d4a2")
-implementation("com.squareup.okhttp3:okhttp:3.14.2")
+implementation("com.github.zensum:auth0-m2m.library:ef2ea10")
 ```
 
 Minimal example for using [Auth0TokenService](src/main/kotlin/io/klira/auth0/m2m/Auth0TokenService.kt) and doing a request.
