@@ -5,7 +5,7 @@ Wrapper library for requesting a machine-to-machine token from Auth0
 [![Release](https://jitpack.io/v/zensum/auth0-m2m.svg)](https://jitpack.io/#zensum/auth0-m2m)
 
 ## Motivation
-Many services requires authenticatation by some means. A common authentication
+Many services requires authentication by some means. A common authentication
 method is by a _bearer token_ that is a JSON Web Token (JWT) which is issued by
 [Auth0](https://auth0.com). When services are making requests to each other
 by an Auth0 JWT, a machine-to-machine token is required. This library is a
