@@ -11,7 +11,9 @@ method is by a _bearer token_ that is a JSON Web Token (JWT) which is issued by
 by an Auth0 JWT, a machine-to-machine token is required. This library is a
 convenient wrapper for doing requests for fetching such token from Auth0.
 
-See [Using JSON Web Tokens](https://github.com/zensum/documentation/tree/master/security/Auth0/Using%20JSON%20Web%20Tokens.md) for more information on this topic.
+For more information on this topic see
+- [JSON Web Tokens](https://auth0.com/docs/jwt)
+- [Machine to Machine Tokens](https://auth0.com/docs/architecture-scenarios/implementation/b2b/b2b-authorization#machine-to-machine-m2m-authorization)
 
 ## Usage
 
