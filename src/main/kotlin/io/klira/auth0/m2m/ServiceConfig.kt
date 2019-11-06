@@ -28,7 +28,7 @@ data class ServiceConfig(
 
     private fun read(key: String): String {
         val value: String = config[key] ?: error("Missing value for $key")
-        require(value.isNotBlank())
+        require(value.isNotBlank()) { "Value for $key was empty or blank" }
         return value
     }
 
