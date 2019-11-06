@@ -69,6 +69,13 @@ tasks {
         }
     }
 
+    compileTestKotlin {
+        sourceCompatibility = Version.JVM
+        kotlinOptions {
+            jvmTarget = Version.JVM
+        }
+    }
+
 
     wrapper {
         description = "Generates gradlew[.bat] scripts for faster execution"
