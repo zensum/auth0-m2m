@@ -5,10 +5,12 @@ data class ServiceConfig(
     private val config: Map<String, String> = System.getenv()
 ): Map<String, String> by config {
 
-    fun audience(): String = config[AUDIENCE] ?: error("Missing $AUDIENCE")
-    fun clientId(): String = config[ID] ?: error("Missing $ID")
-    fun clientSecret(): String = config[SECRET] ?: error("Missing $SECRET")
-    fun tenant(): String = config[TENANT] ?: error("Missing $TENANT")
+    fun audience(): String = read(AUDIENCE)
+    fun clientId(): String = read(ID)
+    fun clientSecret(): String = read(SECRET)
+    fun tenant(): String = read(TENANT).also {
+        require(it.startsWith("https://")) { "Tenant URL must use https" }
+    }
 
     fun withClientId(clientId: String): ServiceConfig =
         this.copy(config = config.plus(ID to clientId))
@@ -22,6 +24,12 @@ data class ServiceConfig(
     fun withTenant(tenant: String): ServiceConfig {
         require(tenant.startsWith("https://")) { "Tenant URL must use https" }
         return this.copy(config = config.plus(TENANT to tenant))
+    }
+
+    private fun read(key: String): String {
+        val value: String = config[key] ?: error("Missing value for $key")
+        require(value.isNotBlank())
+        return value
     }
 
     companion object {
